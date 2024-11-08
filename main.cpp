@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <vector>
 using json = nlohmann::json;
 using namespace std;
 
@@ -13,6 +14,11 @@ class ImageParser{
         void set_json(json jf) {
             _jf = jf;
         }
+        void print(vector<string> vec) {
+            for (int i = 0; i < vec.size(); i++) {
+                cout << vec[i] << endl;
+            }
+        }
 
     protected:
         json _jf;
@@ -22,7 +28,15 @@ class UbuntuImageParser : public ImageParser {
     public:
         // add consts and header comments
         void getReleases() {
-            cout << "1 - Return a list of all currently supported Ubuntu releases" << endl;
+            vector<string> releases;
+            for (const auto& item : _jf["products"].items()) {
+                if (_jf["products"][item.key()]["supported"]) {
+                    releases.push_back(_jf["products"][item.key()]["version"]);
+                }
+            }
+            releases.erase( unique( releases.begin(), releases.end() ), releases.end() );
+            cout << "The currently supported Ubuntu releases are:" << endl;
+            print(releases);
         }
 
         void getCurrentLTS() {
@@ -73,13 +87,15 @@ class UbuntuImageParser : public ImageParser {
 int main() {
     // get json data from website
     // https://cloud-images.ubuntu.com/releases/streams/v1/com.ubuntu.cloud:released:download.json
-    // std::ifstream f("download.json");
-    // json jf = json::parse(f);
+    std::ifstream f("download.json");
+    json jf = json::parse(f);
 
     // cout << jf["products"] << endl;
 
     UbuntuImageParser u;
+    u.set_json(jf);
+    u.getReleases();
+    // u.getChoice();
 
-    u.getChoice();
     return 0;
 }
