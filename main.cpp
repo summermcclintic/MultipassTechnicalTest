@@ -3,6 +3,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include <vector>
+#include <sstream>
 using json = nlohmann::json;
 using namespace std;
 
@@ -40,7 +41,24 @@ class UbuntuImageParser : public ImageParser {
         }
 
         void getCurrentLTS() {
-            cout << "2 - Return the current Ubuntu LTS version" << endl;
+            string version = "";
+            vector<string> aliases;
+            for (const auto& item : _jf["products"].items()) {
+                string as = _jf["products"][item.key()]["aliases"];
+                stringstream ss(as);
+                while (ss.good()) {
+                    string substr;
+                    getline(ss, substr, ',');
+                    aliases.push_back(substr);
+                }
+                for (int i = 0; i < aliases.size(); i++) {
+                    if (aliases[i] == "lts") {
+                        version = _jf["products"][item.key()]["version"];
+                    }
+                }
+                aliases.clear();
+            }
+            cout << "The current Ubuntu LTS version is " << version << "." << endl;
         }
 
         void getSha256() {
@@ -94,7 +112,8 @@ int main() {
 
     UbuntuImageParser u;
     u.set_json(jf);
-    u.getReleases();
+    // u.getReleases();
+    u.getCurrentLTS();
     // u.getChoice();
 
     return 0;
