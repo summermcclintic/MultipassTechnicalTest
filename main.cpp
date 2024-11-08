@@ -12,9 +12,30 @@ class ImageParser{
         virtual void getReleases() = 0;
         virtual void getCurrentLTS() = 0;
         virtual void getSha256() = 0;
+
         void set_json(json jf) {
             _jf = jf;
         }
+
+        bool is_in(vector<string> versions, string v) {
+            for (int i = 0; i < versions.size(); i++) {
+                if (versions[i] == v) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void print_options() {
+            cout << endl;
+            cout << "0 - Quit" << endl;
+            cout << "1 - Return a list of all currently supported Ubuntu releases" << endl;
+            cout << "2 - Return the current Ubuntu LTS version" << endl;
+            cout << "3 - Return the sha256 of the disk1.img item of a given Ubuntu release" << endl;
+            cout << endl;
+            cout << "Enter \"1\", \"2\", or \"3\" for corresponding choice, or \"0\" to quit." << endl;
+        }
+
         void print(vector<string> vec) {
             for (int i = 0; i < vec.size()-1; i++) {
                 cout << vec[i] << ", ";
@@ -62,21 +83,13 @@ class UbuntuImageParser : public ImageParser {
             cout << "The current Ubuntu LTS version is " << version << "." << endl;
         }
 
-        bool is_in(vector<string> versions, string v) {
-            for (int i = 0; i < versions.size(); i++) {
-                if (versions[i] == v) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         void getSha256() {
             vector<string> versions;
             for (const auto& item : _jf["products"].items()) {
-                versions.push_back(_jf["products"][item.key()]["version"]);
+                if (_jf["products"][item.key()]["arch"] == "amd64") {
+                    versions.push_back(_jf["products"][item.key()]["version"]);
+                }
             }
-            versions.erase(unique(versions.begin(), versions.end()), versions.end());
             cout << "Please input which Ubuntu release to find the sha256 of the disk1.img item of. Ubuntu versions are:" << endl;
             print(versions);
             string version = "";
@@ -94,18 +107,9 @@ class UbuntuImageParser : public ImageParser {
                     archs.push_back(_jf["products"][item.key()]["arch"]);
                 }
             }
-
-            cout << "Which architecture would you like?" << endl;
-            print(archs);
-            string arch = "";
-            cin >> arch;
-            while (!is_in(archs, arch)) {
-                cout << "Please enter an architecture that exists." << endl;
-                cin >> arch;
-            }
             int index = 0;
             for (int i = 0; i < archs.size(); i++) {
-                if (archs[i] == arch) {
+                if (archs[i] == "amd64") {
                     index = i;
                 }
             }
@@ -115,28 +119,24 @@ class UbuntuImageParser : public ImageParser {
                 dates.push_back(item.key());
             }
 
-            cout << "Which date would you like to see the sha256 of the disk1.img of?" << endl;
-            string date = "";
-            print(dates);
-            cin >> date;
-            while (!is_in(dates, date)) {
-                cout << "Please enter a date that exists." << endl;
+            string date = dates[0];
+            if (dates.size() > 1) {
+                cout << "Which date would you like to see the sha256 of the disk1.img of?" << endl;
+                print(dates);
                 cin >> date;
+                while (!is_in(dates, date)) {
+                    cout << "Please enter a date that exists." << endl;
+                    cin >> date;
+                }
             }
 
             cout << endl;
-            cout << "Here is the sha56 of the disk1.img for Ubuntu version " << version << ", architecture " << arch << ", and date " << date << ":" << endl;
-            cout << _jf["products"][options[index]]["versions"][date]["items"]["disk1.img"]["sha256"] << endl;
-        }
-
-        void print_options() {
-            cout << endl;
-            cout << "0 - Quit" << endl;
-            cout << "1 - Return a list of all currently supported Ubuntu releases" << endl;
-            cout << "2 - Return the current Ubuntu LTS version" << endl;
-            cout << "3 - Return the sha256 of the disk1.img item of a given Ubuntu release" << endl;
-            cout << endl;
-            cout << "Enter \"1\", \"2\", or \"3\" for corresponding choice, or \"0\" to quit." << endl;
+            if (_jf["products"][options[index]]["versions"][date]["items"]["disk1.img"]["sha256"].is_null()) {
+                cout << "The sha56 of the disk1.img for Ubuntu version " << version << ", architecture amd64, and date " << date << " does not exist." << endl;
+            } else {
+                cout << "Here is the sha56 of the disk1.img for Ubuntu version " << version << ", architecture amd64, and date " << date << ":" << endl;
+                cout << _jf["products"][options[index]]["versions"][date]["items"]["disk1.img"]["sha256"] << endl;
+            }
         }
 
         void getChoice() {
