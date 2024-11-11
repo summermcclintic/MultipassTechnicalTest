@@ -9,17 +9,20 @@
 using json = nlohmann::json;
 using namespace std;
 
+// ImageParser interface
 class ImageParser{
     public:
         virtual void getReleases() = 0;
         virtual void getCurrentLTS() = 0;
         virtual void getSha256() = 0;
 
-        void set_json(json jf) {
+        // set class json variable
+        void set_json(const json jf) {
             _jf = jf;
         }
 
-        bool is_in(vector<string> versions, string v) {
+        // checks to see if a string is in an array of strings
+        bool is_in(const vector<string> versions, const string v) const {
             for (int i = 0; i < versions.size(); i++) {
                 if (versions[i] == v) {
                     return true;
@@ -28,7 +31,8 @@ class ImageParser{
             return false;
         }
 
-        void print_options() {
+        // prints out options user can select from
+        void print_options() const {
             cout << endl;
             cout << "0 - Quit" << endl;
             cout << "1 - Return a list of all currently supported Ubuntu releases" << endl;
@@ -38,7 +42,8 @@ class ImageParser{
             cout << "Enter \"1\", \"2\", or \"3\" for corresponding choice, or \"0\" to quit." << endl;
         }
 
-        void print(vector<string> vec) {
+        // prints a vector with commas and a space seperating each element
+        void print(const vector<string> vec) const {
             for (int i = 0; i < vec.size()-1; i++) {
                 cout << vec[i] << ", ";
             }
@@ -51,7 +56,7 @@ class ImageParser{
 
 class UbuntuImageParser : public ImageParser {
     public:
-        // add consts and header comments
+        // method to print out a kist of all currently supported Ubuntu releases
         void getReleases() {
             vector<string> releases;
             for (const auto& item : _jf["products"].items()) {
@@ -64,6 +69,7 @@ class UbuntuImageParser : public ImageParser {
             print(releases);
         }
 
+        // method to print out the current Ubuntu LTS version
         void getCurrentLTS() {
             string version = "";
             vector<string> aliases;
@@ -85,6 +91,7 @@ class UbuntuImageParser : public ImageParser {
             cout << "The current Ubuntu LTS version is " << version << "." << endl;
         }
 
+        // method to print out the sha256 of the disk1.img item of a given Ubuntu release
         void getSha256() {
             vector<string> versions;
             for (const auto& item : _jf["products"].items()) {
@@ -141,6 +148,7 @@ class UbuntuImageParser : public ImageParser {
             }
         }
 
+        // method to ask the user which choice they want, keep asking until the user terminates by entering "0"
         void getChoice() {
             print_options();
             int choice = -1;
@@ -178,12 +186,13 @@ class UbuntuImageParser : public ImageParser {
         }
 };
 
-// Function to handle data received from libcurl
+// Function to handle data received from libcurl and write to string
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s) {
     s->append(static_cast<char*>(contents), size * nmemb);
     return size * nmemb;
 }
 
+// Function to fetch JSON data from a URL using libcurl
 string fetch_json(const std::string& url) {
     CURL* curl;
     CURLcode res;
@@ -206,10 +215,12 @@ string fetch_json(const std::string& url) {
 }
 
 int main() {
+    // get json data from website
     string url = "https://cloud-images.ubuntu.com/releases/streams/v1/com.ubuntu.cloud:released:download.json";
     string json_data = fetch_json(url);
     json jf = json::parse(json_data);
 
+    // set up parser of json data
     UbuntuImageParser u;
     u.set_json(jf);
     u.getChoice();
