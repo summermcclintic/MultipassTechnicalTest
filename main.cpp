@@ -2,8 +2,10 @@
 #include <fstream>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <curl/curl.h>
 #include <vector>
 #include <sstream>
+
 using json = nlohmann::json;
 using namespace std;
 
@@ -176,11 +178,37 @@ class UbuntuImageParser : public ImageParser {
         }
 };
 
+// Function to handle data received from libcurl
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* s) {
+    s->append(static_cast<char*>(contents), size * nmemb);
+    return size * nmemb;
+}
+
+string fetch_json(const std::string& url) {
+    CURL* curl;
+    CURLcode res;
+    std::string readBuffer;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+            cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
+        }
+        curl_easy_cleanup(curl);
+    }
+
+    return readBuffer;
+}
+
 int main() {
-    // get json data from website
-    // https://cloud-images.ubuntu.com/releases/streams/v1/com.ubuntu.cloud:released:download.json
-    std::ifstream f("download.json");
-    json jf = json::parse(f);
+    string url = "https://cloud-images.ubuntu.com/releases/streams/v1/com.ubuntu.cloud:released:download.json";
+    string json_data = fetch_json(url);
+    json jf = json::parse(json_data);
 
     UbuntuImageParser u;
     u.set_json(jf);
