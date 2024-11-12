@@ -18,6 +18,7 @@ _Using Homebrew_
 ```sh
     cmake .
 ```
+_For installing with other package managers, check [here](https://json.nlohmann.me/integration/package_managers/)._
 
 ### Windows
 Here's how to install with Windows.
