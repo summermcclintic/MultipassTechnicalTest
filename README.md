@@ -14,10 +14,6 @@ _Using Homebrew_
 ```sh
     brew install curl
 ```
-3. `cd` into `MultipassTechnicalTest` and compile `cmake`
-```sh
-    cmake .
-```
 _For installing with other package managers, check [here](https://json.nlohmann.me/integration/package_managers/)._
 
 ### Windows
@@ -29,11 +25,15 @@ Here's how to install with Linux.
 ## Usage
 
 ### Compile and run
-1. Compile using `make`
+1. `cd` into `MultipassTechnicalTest` and compile `cmake` (this step only needs to be done once)
+```sh
+    cmake .
+```
+2. Compile using `make`
 ```sh
     make
 ```
-2. Run `main`
+3. Run `main`
 ```sh
     ./main
 ```
