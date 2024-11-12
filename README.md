@@ -3,6 +3,7 @@ This is my submission for Canonical's Multipass engineer technical test.
 
 ## Installation
 This project requires the installation of two libraries, `nlohmann` and `libcurl`.
+_For installing with other package managers not listed, check [here](https://json.nlohmann.me/integration/package_managers/)._
 
 ### macOS
 _Using Homebrew_
@@ -14,13 +15,19 @@ _Using Homebrew_
 ```sh
     brew install curl
 ```
-_For installing with other package managers, check [here](https://json.nlohmann.me/integration/package_managers/)._
 
 ### Windows
 Here's how to install with Windows.
 
 ### Linux
-Here's how to install with Linux.
+1. Install `nlohmann`
+```sh
+    sudo apt-get install nlohmann-json3-dev
+```
+2. Install `libcurl`
+```sh
+    sudo apt-get install libcurl4-openssl-dev
+```
 
 ## Usage
 
