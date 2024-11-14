@@ -12,7 +12,7 @@ using namespace std;
 // ImageParser interface
 class ImageParser{
     public:
-        virtual void getReleases() = 0;
+        virtual void getReleases() = 0; 
         virtual void getCurrentLTS() = 0;
         virtual void getSha256() = 0;
 

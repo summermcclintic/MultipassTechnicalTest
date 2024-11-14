@@ -7,7 +7,7 @@ For installing `nlohmann` with other package managers not listed, check [here](h
 
 ### macOS
 _Using Homebrew_
-1. Install `nlohmann`
+1. Install `nlohmann` 
 ```sh
     brew install nlohmann-json
 ```
