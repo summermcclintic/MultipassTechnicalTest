@@ -3,7 +3,7 @@ This is my submission for Canonical's Multipass engineer technical test.
 
 ## Installation
 This project requires the installation of two libraries, `nlohmann` and `libcurl`.
-For installing with other package managers not listed, check [here](https://json.nlohmann.me/integration/package_managers/).
+For installing `nlohmann` with other package managers not listed, check [here](https://json.nlohmann.me/integration/package_managers/).
 
 ### macOS
 _Using Homebrew_
@@ -18,6 +18,7 @@ _Using Homebrew_
 
 ### Windows
 Note - Visual Studio must be installed.
+
 _Using vcpkg_
 1. Install `nlohmann`
 ```sh
@@ -60,10 +61,10 @@ _Using vcpkg_
     mkdir build
     cd build
     cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=<vcpkg-root>\installed\x64-windows ..
-    cmake -G "Visual Studio 17 2022" ..
+    cmake -G "Visual Studio 17 2022" ..     # Note - change 17 and 2022 to your version of Visual Studio
     cmake --build . --config Release
 ```
-2. `cd` into `MultipassTechnicalTest/Release` and run
+2. `cd` into `Release` and run
 ```sh
     cd Release
     .\main.exe
