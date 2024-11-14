@@ -1,5 +1,5 @@
 # MultipassTechnicalTest
-This is my submission for Canonical's Multipass engineer technical test.
+This is my submission for Canonical's Multipass engineer technical test. GitHub repo can be found [here](https://github.com/summermcclintic/MultipassTechnicalTest).
 
 ## Installation
 This project requires the installation of two libraries, `nlohmann` and `libcurl`.

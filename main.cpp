@@ -56,7 +56,7 @@ class ImageParser{
 
 class UbuntuImageParser : public ImageParser {
     public:
-        // method to print out a kist of all currently supported Ubuntu releases
+        // method to print out a list of all currently supported Ubuntu releases
         void getReleases() {
             vector<string> releases;
             for (const auto& item : _jf["products"].items()) {
