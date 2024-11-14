@@ -17,7 +17,16 @@ _Using Homebrew_
 ```
 
 ### Windows
-Here's how to install with Windows.
+Note - Visual Studio must be installed.
+_Using vcpkg_
+1. Install `nlohmann`
+```sh
+    vcpkg install nlohmann-json
+```
+2. Install `libcurl`
+```sh
+    vcpkg install libcurl
+```
 
 ### Linux
 1. Install `nlohmann`
@@ -32,6 +41,7 @@ Here's how to install with Windows.
 ## Usage
 
 ### Compile and run
+macOS and Linux:
 1. `cd` into `MultipassTechnicalTest` and compile `cmake` (this step only needs to be done once)
 ```sh
     cmake .
@@ -43,6 +53,21 @@ Here's how to install with Windows.
 3. Run `main`
 ```sh
     ./main
+```
+Windows:
+1. `cd` into `MultipassTechnicalTest` and compile `cmake` (this step only needs to be done once)
+```sh
+    mkdir build
+    cd build
+    cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts/buildsystems/vcpkg.cmake -DCMAKE_PREFIX_PATH=<vcpkg-root>/installed/x64-windows ..
+    cmake -G "Visual Studio 17 2022" ..
+    cmake --build . --config Release
+```
+2. `cd` into `MultipassTechnicalTest/Release` and run
+Windows:
+```sh
+    cd Release
+    ./main.exe
 ```
 
 ### CLI usage
