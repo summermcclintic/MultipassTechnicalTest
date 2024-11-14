@@ -41,7 +41,7 @@ _Using vcpkg_
 ## Usage
 
 ### Compile and run
-macOS and Linux:
+#### macOS and Linux:
 1. `cd` into `MultipassTechnicalTest` and compile `cmake` (this step only needs to be done once)
 ```sh
     cmake .
@@ -54,20 +54,19 @@ macOS and Linux:
 ```sh
     ./main
 ```
-Windows:
+#### Windows:
 1. `cd` into `MultipassTechnicalTest` and compile `cmake` (this step only needs to be done once)
 ```sh
     mkdir build
     cd build
-    cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts/buildsystems/vcpkg.cmake -DCMAKE_PREFIX_PATH=<vcpkg-root>/installed/x64-windows ..
+    cmake -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=<vcpkg-root>\installed\x64-windows ..
     cmake -G "Visual Studio 17 2022" ..
     cmake --build . --config Release
 ```
 2. `cd` into `MultipassTechnicalTest/Release` and run
-Windows:
 ```sh
     cd Release
-    ./main.exe
+    .\main.exe
 ```
 
 ### CLI usage
